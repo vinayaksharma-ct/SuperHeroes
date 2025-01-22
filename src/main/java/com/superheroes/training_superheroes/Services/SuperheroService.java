@@ -1,6 +1,7 @@
 package com.superheroes.training_superheroes.Services;
 import com.superheroes.training_superheroes.Repository.SuperheroRepository;
 import com.superheroes.training_superheroes.model.Superhero;
+import com.superheroes.training_superheroes.model.SuperheroRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,6 +12,30 @@ public class SuperheroService {
     @Autowired
     public SuperheroService(SuperheroRepository superheroRepository) {
         this.superheroRepository = superheroRepository;
+    }
+
+
+    public Superhero persistSuperhero(SuperheroRequestBody requestBody, String universe){
+        Superhero superhero = new Superhero();
+        superhero.setName(requestBody.getName().toUpperCase());
+        superhero.setPower(requestBody.getPower());
+        if(isDC(universe)){
+            superhero.setUniverse("DC");
+        }
+        else{
+            superhero.setUniverse("Marvel");
+        }
+        Superhero superhero1 = superheroRepository.save(superhero);
+        return superhero1;
+    }
+
+    private  boolean isDC(String Universe){
+        if(Universe.equals("DC")){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     public Superhero getSuperheroByName(String name) {
         return superheroRepository.findByName(name);
